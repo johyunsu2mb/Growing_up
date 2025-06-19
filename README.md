@@ -50,7 +50,7 @@
 9. 예외 처리  
 10. 모듈과 패키지  
 
-[📂 Python 파일로 이동](python_summary.md)
+[📂 Python 파일로 이동](python_test.py)
 
 ---
 
@@ -77,4 +77,4 @@
 12. 제네릭  
 13. 람다 표현식과 함수형 인터페이스  
 
-[📂 Java 파일로 이동](java_summary.md)
+[📂 Java 파일로 이동](java_project/src/project1/JavaCoreConcepts.java)

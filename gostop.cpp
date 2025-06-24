@@ -126,3 +126,78 @@ int main() {
     return 0;
 }
 
+
+#include <random>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    const int NUM_PLAYERS = 3;
+    const int NUM_CARDS = NUM_PLAYERS * 2; 
+    int cards[NUM_CARDS]; 
+    string re;
+
+    random_device rd;
+    mt19937 engine(rd()); //랜덤 함수 안정화
+    uniform_int_distribution<int> distrib(1, 10);
+
+    bool game_running = true;
+
+    while (game_running) {
+        bool valid = false;
+
+            // 내부 루프 수정
+    while (!valid) {
+        int count[11] = {};
+        valid = true;
+    
+        for (int i = 0; i < NUM_CARDS; ++i) {
+            cards[i] = distrib(engine);
+            count[cards[i]]++;
+            valid = valid && (count[cards[i]] <= 2);
+        }
+    
+        // 중복 카드쌍 검사
+        for (int i = 0; i < NUM_PLAYERS && valid; ++i) {
+            for (int j = i + 1; j < NUM_PLAYERS; ++j) {
+                int a1 = cards[i * 2], a2 = cards[i * 2 + 1];
+                int b1 = cards[j * 2], b2 = cards[j * 2 + 1];
+                valid = valid && !((a1 == b1 && a2 == b2) || (a1 == b2 && a2 == b1));
+            }
+        }
+    }
+
+
+        int score[NUM_PLAYERS];
+        string msg[NUM_PLAYERS];
+
+        for (int i = 0; i < NUM_PLAYERS; ++i) {
+            int a = cards[i * 2], b = cards[i * 2 + 1];
+            msg[i] = (a == b ? "땡" : "끗");
+            score[i] = (msg[i] == "땡") * (10 + a) + (msg[i] != "땡") * ((a + b > 10) ? (a + b - 10) : (a + b));
+
+            int display = (msg[i] == "땡") ? a : score[i];
+
+            cout << i + 1 << "번 플레이어 패: " << a << ", " << b << " -> " << display << msg[i] << endl;
+        }
+
+        // 승자 판별
+        int winner_index = 0;
+        for (int i = 1; i < NUM_PLAYERS; ++i)
+            winner_index = (score[i] > score[winner_index]) ? i : winner_index;
+
+        // 동점자 있는지 확인
+        int tie = 0;
+        for (int i = 0; i < NUM_PLAYERS; ++i)
+            tie += (score[i] == score[winner_index]);
+
+        cout << (tie > 1 ? "무승부!" : to_string(winner_index + 1) + "번 플레이어 승리!") << endl;
+
+        cout << "재시작 y/n : ";
+        cin >> re;
+        game_running = (re == "y");
+    }
+
+    return 0;
+}
